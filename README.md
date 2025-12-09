@@ -35,6 +35,96 @@ pip install ipywidgets
 pip install stable-baselines3==2.0.0
 ```
 
+## Running Experiments
+
+### Training
+
+To train an agent, run the `train.py` script located in the `scripts/` directory.
+
+```bash
+python scripts/train.py --algo PPO --episodes 1000
+````
+
+#### Logging with Weights & Biases
+
+To log training metrics to Weights & Biases, enable the `--wandb` flag and specify your W&B entity (typically your username):
+
+```bash
+python scripts/train.py \
+  --algo PPO \
+  --episodes 1000 \
+  --wandb \
+  --entity <your_wandb_entity>
+```
+
+#### Train / Validation Split
+
+To enable a train–validation split, use the `--frac` flag to specify the proportion of data used for training (e.g., `0.8`, `0.7`):
+
+```bash
+python scripts/train.py \
+  --algo PPO \
+  --episodes 1000 \
+  --frac 0.8
+```
+
+#### Algorithm Selection and Training Length
+
+Choose one of the supported OmniSafe algorithms using the `--algo` flag (e.g., `PPO`, `SAC`) and set the number of training episodes with `--episodes`:
+
+```bash
+python scripts/train.py --algo PPO --episodes 1000
+```
+
+---
+
+### Modifying Training Parameters
+
+To customize algorithm-specific training parameters:
+
+1. Locate the corresponding OmniSafe configuration file in:
+
+   ```
+   omnisafe/omnisafe/configs/
+   ```
+
+   For example:
+
+   ```
+   omnisafe/omnisafe/configs/on-policy/PPO.yaml
+   ```
+
+2. Review the available parameters under the `algo_cfgs` section of the config file.
+
+3. In `train.py`, add or override the desired parameters in the `custom_cfgs` dictionary under the `algo_cfgs` key.
+
+---
+
+### Evaluation
+
+To evaluate a trained agent, use the `evaluate.py` script.
+
+You must specify the experiment directory containing the trained model using the `--exp_dir` flag:
+
+```bash
+python scripts/evaluate.py \
+  --exp_dir ./experiments/PPO_seed1_04-11-25_14:46:25
+```
+
+#### Evaluation Modes
+
+* **Validation (default):**
+  Evaluates the agent on the validation split (held-out portion of the training data).
+
+* **Test:**
+  To evaluate on the test set (same dataset as training but a different building), enable the `--test` flag:
+
+```bash
+python scripts/evaluate.py \
+  --exp_dir ./experiments/PPO_seed1_04-11-25_14:46:25 \
+  --test
+```
+
 ## Our modifications
 
 ### a. Omnisafe
